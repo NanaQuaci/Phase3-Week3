@@ -13,13 +13,29 @@ pipeline {
         stage('Run JMeter Test') {
             steps {
                 // Clean old reports if any exists
-                sh 'rm -rf reports results.jtl || true'
+                sh '''
+                rm -rf ${WORKSPACE}/reports ${WORKSPACE}/results.jtl || true
+                jmeter -n -t ${WORKSPACE}/Magento_Performance_Testing.jmx \
+                       -l ${WORKSPACE}/results.jtl \
+                       -e -o ${WORKSPACE}/reports
+                '''
+
 
                 // Run JMeter in non-GUI mode
                 sh '''
                 jmeter -n -t Magento_Performance_Testing.jmx \
                        -l results.jtl \
                        -e -o reports
+                '''
+            }
+        }
+
+        stage('Verify JMeter Output') {
+            steps {
+                sh '''
+                echo "Results file size:"
+                ls -lh results.jtl
+                head -n 20 results.jtl
                 '''
             }
         }
