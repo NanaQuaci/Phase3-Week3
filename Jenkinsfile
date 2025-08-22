@@ -12,7 +12,7 @@ pipeline {
 
         stage('Run JMeter Test') {
             steps {
-                // Clean old reports if any
+                // Clean old reports if any exists
                 sh 'rm -rf reports results.jtl || true'
 
                 // Run JMeter in non-GUI mode
