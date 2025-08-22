@@ -14,18 +14,16 @@ pipeline {
             steps {
                 // Clean old reports if any exists
                 sh '''
-                rm -rf ${WORKSPACE}/reports ${WORKSPACE}/results.jtl || true
-                jmeter -n -t ${WORKSPACE}/Magento_Performance_Testing.jmx \
-                       -l ${WORKSPACE}/results.jtl \
-                       -e -o ${WORKSPACE}/reports
+                rm -rf "${WORKSPACE}/reports" "${WORKSPACE}/results.jtl"
+                mkdir -p "${WORKSPACE}/reports"
                 '''
 
 
                 // Run JMeter in non-GUI mode
                 sh '''
-                jmeter -n -t Magento_Performance_Testing.jmx \
-                       -l results.jtl \
-                       -e -o reports
+                jmeter -n -t ${WORKSPACE}/Magento_Performance_Testing.jmx \
+                                       -l ${WORKSPACE}/results.jtl \
+                                       -e -o ${WORKSPACE}/reports
                 '''
             }
         }
@@ -34,8 +32,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Results file size:"
-                ls -lh results.jtl
-                head -n 20 results.jtl
+                ls -lh ${WORKSPACE}/results.jtl
+                head -n 20 ${WORKSPACE}/results.jtl
                 '''
             }
         }
