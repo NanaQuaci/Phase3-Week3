@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        image 'jenkins'
+    }
 
     stages {
         stage('Checkout') {
